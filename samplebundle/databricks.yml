@@ -36,6 +36,3 @@ targets:
     variables:
       catalog: workspace
       schema: prod
-    permissions:
-      - user_name: kdeepika11@gmail.com
-        level: CAN_MANAGE
