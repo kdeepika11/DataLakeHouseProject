@@ -26,7 +26,7 @@ targets:
       host: https://dbc-434ee770-dc97.cloud.databricks.com
     variables:
       catalog: workspace
-      schema: deepika_dev
+      schema: dev
   prod:
     mode: production
     workspace:
