@@ -2,71 +2,50 @@ name: Databricks Bundle CI/CD
 
 on:
   pull_request:
-    branches: [ main ]
+    branches: [ main, develop ]
   push:
-    branches: [ main ]
-  workflow_dispatch:
+    branches: [ develop, main ]
 
 jobs:
   validate:
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
-
-      - name: Install Databricks CLI
-        uses: databricks/setup-cli@main
-
-      - name: Validate dev target
-        run: databricks bundle validate -t dev
+      - uses: actions/checkout@v4
+      - uses: databricks/setup-cli@main
+      - run: databricks bundle validate -t dev
         env:
           DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
           DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
 
   deploy-dev:
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
-
-      - name: Install Databricks CLI
-        uses: databricks/setup-cli@main
-
-      - name: Validate dev target
-        run: databricks bundle validate -t dev
+      - uses: actions/checkout@v4
+      - uses: databricks/setup-cli@main
+      - run: databricks bundle validate -t DEV
         env:
           DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
           DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
-
-      - name: Deploy dev target
-        run: databricks bundle deploy -t dev
+      - run: databricks bundle deploy -t DEV
         env:
           DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
           DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
 
   deploy-prod:
-    if: github.event_name == 'workflow_dispatch'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
-
+    environment:
+      name: prod
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
-
-      - name: Install Databricks CLI
-        uses: databricks/setup-cli@main
-
-      - name: Validate prod target
-        run: databricks bundle validate -t prod
+      - uses: actions/checkout@v4
+      - uses: databricks/setup-cli@main
+      - run: databricks bundle validate -t prod
         env:
           DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
           DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
-
-      - name: Deploy prod target
-        run: databricks bundle deploy -t prod
+      - run: databricks bundle deploy -t prod
         env:
           DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
           DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
