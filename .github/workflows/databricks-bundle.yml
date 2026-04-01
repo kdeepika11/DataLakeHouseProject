@@ -13,7 +13,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: databricks/setup-cli@main
-      - run: databricks bundle validate -t dev
+      - name: Validate dev target
+        working-directory: ./samplebundle
+        run: databricks bundle validate -t dev
         env:
           DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
           DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
@@ -24,11 +26,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: databricks/setup-cli@main
-      - run: databricks bundle validate -t DEV
+      - name: Validate dev target
+        working-directory: ./samplebundle
+        run: databricks bundle validate -t dev
         env:
           DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
           DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
-      - run: databricks bundle deploy -t DEV
+      - name: Deploy dev target
+        working-directory: ./samplebundle
+        run: databricks bundle deploy -t dev
         env:
           DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
           DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
@@ -41,11 +47,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: databricks/setup-cli@main
-      - run: databricks bundle validate -t prod
+      - name: Validate prod target
+        working-directory: ./samplebundle
+        run: databricks bundle validate -t prod
         env:
           DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
           DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
-      - run: databricks bundle deploy -t prod
+      - name: Deploy prod target
+        working-directory: ./samplebundle
+        run: databricks bundle deploy -t prod
         env:
           DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
           DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
